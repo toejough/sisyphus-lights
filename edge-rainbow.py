@@ -2,7 +2,7 @@
 # Name: Rainbow Inverted
 # Author: toejough
 #
-# Description: Paints a color based on angle, with a larger slice by closeness to the edge, surrounded by a rainbow starting and stopping at the opposite hue.
+# Description: Paints a color based on angle, with a larger slice by closeness to the edge, filled in with a rainbow starting and stopping at a consistent hue.
 
 try:
     from neopixel import *
@@ -27,7 +27,7 @@ def wheel(pos):
     pos = int(pos * (256*3 - 1))
     if pos < 256: # green -> red
         r = pos
-        g = int((255 - pos) / 1.5) # green is really bright on these led's. Lean towards the red
+        g = int((255 - pos) / 2) # green is really bright on these led's. Lean towards the red
         b = 0
     elif pos < 256*2: # red -> blue 
         pos -= 256
@@ -37,7 +37,7 @@ def wheel(pos):
     else: # blue -> green
         pos -= 256 * 2
         r = 0 
-        g = int(pos /2) # green is really bright on these led's. Lean towards the blue
+        g = int(pos / 2) # green is really bright on these led's. Lean towards the blue
         b = 255 - pos
     # g = int(g / 2) # green is perceived to be 2x as bright with these LED's
     return Color(r, g, b)
@@ -98,8 +98,8 @@ def update(strip, table_values):
         # spread by area instead of by raw radius
         percent_LED = rho ** 2 # pi*r^2 / pi*(max r)^2 -> r^2 / 1^2 -> r^2
         spread_degrees = percent_LED * 360
-        spread_l = degrees - spread_degrees / 2
-        spread_r = degrees + spread_degrees / 2
+        spread_l = degrees
+        spread_r = degrees + spread_degrees
 
         start = int( (spread_l * led_count) / 360 )
         end = int( (spread_r * led_count) / 360 ) + 1
@@ -118,7 +118,7 @@ def update(strip, table_values):
         if rainbow_start > rainbow_end:
             rainbow_end += led_count
         # inverted
-        starting_hue = (hue + 0.5) % 1
+        starting_hue = 0
         # regular
         # starting_hue = hue 
         for x in range(rainbow_start, rainbow_end):
